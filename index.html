@@ -1089,3 +1089,52 @@
     </script>
 </body>
 </html>
+<script>
+    // ফটো লোড করার ফাংশন
+    function loadProfilePhoto() {
+        const photoSources = [
+            "profile.jpg",  // লোকাল ফাইল
+            "https://raw.githubusercontent.com/riyad123/portfolio/main/profile.jpg",  // GitHub Raw
+            "https://i.ibb.co/xxxxxx/photo.jpg"  // imgbb ব্যাকআপ
+        ];
+        
+        let currentIndex = 0;
+        const heroImg = document.getElementById("profileImage");
+        const aboutImg = document.getElementById("aboutImage");
+        
+        function tryNextSource() {
+            if (currentIndex >= photoSources.length) {
+                // সব ব্যর্থ হলে ফ্যালব্যাক
+                const fallback = "https://ui-avatars.com/api/?background=0a0a0a&color=00f2fe&size=300&name=MD+Riyad+Hossen&bold=true";
+                if (heroImg) heroImg.src = fallback;
+                if (aboutImg) aboutImg.src = fallback;
+                console.log("Using fallback avatar");
+                return;
+            }
+            
+            const src = photoSources[currentIndex];
+            console.log("Trying:", src);
+            
+            const testImg = new Image();
+            testImg.onload = function() {
+                console.log("✅ Loaded:", src);
+                if (heroImg) heroImg.src = src;
+                if (aboutImg) aboutImg.src = src;
+            };
+            testImg.onerror = function() {
+                console.log("❌ Failed:", src);
+                currentIndex++;
+                tryNextSource();
+            };
+            testImg.src = src;
+        }
+        
+        tryNextSource();
+    }
+    
+    // পৃষ্ঠা লোড হলে চালু করুন
+    window.addEventListener('load', loadProfilePhoto);
+    
+    // localStorage থেকে ডাটা লোডের পরও চালু করুন
+    setTimeout(loadProfilePhoto, 1000);
+</script>
